@@ -7,9 +7,12 @@ namespace Game
 {
     public class Main : MonoBehaviour
     {
+        public static Main Instance;
 
         private PoolManager<GameItem> poolManager;
         private EventChannels<IListener> eventChannel;
+
+        private GameManager gameManager;
 
         public PoolManager<GameItem> PoolManager
         { 
@@ -37,14 +40,37 @@ namespace Game
             }
         }
 
+        public GameManager GameManager 
+        {
+            get 
+            {
+                if(gameManager == null)
+                {
+                    gameManager = new GameManager();
+                }
+                return gameManager; 
+            } 
+        }
+
         void Awake()
         {
+            if(Instance == null)
+            {
+                Instance = this;
+            }
+            else if (Instance != this)
+            { 
+                Destroy(gameObject);
+            }
+
             InitGame();
         }
 
         void InitGame()
         {
-            var path = "Prefabs/Enemy";
+
+            GameManager.Init();
+            /*var path = "Prefabs/Enemy";
             var patternItem = Resources.Load(path) as GameObject;
             
             if (!patternItem)
@@ -61,7 +87,7 @@ namespace Game
 
             info.prefabName = patternItem.name;
 
-            var pool = PoolManager.GetOrCreatePool(info);
+            var pool = PoolManager.GetOrCreatePool(info);*/
         }
     }
 }
