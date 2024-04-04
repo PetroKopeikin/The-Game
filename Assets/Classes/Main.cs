@@ -9,22 +9,26 @@ namespace Game
     {
         public static Main Instance;
 
+        public SimpleDI container;
+
         private PoolManager<GameItem> poolManager;
+
         private EventChannels<IListener> eventChannel;
 
         private GameManager gameManager;
 
+
         public PoolManager<GameItem> PoolManager
-        { 
-            get 
+        {
+            get
             {
-                if(poolManager == null)
+                if (poolManager == null)
                 {
                     poolManager = new PoolManager<GameItem>();
                 }
-                
-                return poolManager; 
-            } 
+
+                return poolManager;
+            }
         }
 
         public EventChannels<IListener> EventChannel
@@ -54,7 +58,8 @@ namespace Game
 
         void Awake()
         {
-            if(Instance == null)
+
+            if (Instance == null)
             {
                 Instance = this;
             }
@@ -63,6 +68,9 @@ namespace Game
                 Destroy(gameObject);
             }
 
+            this.GetContainer().BuildDependencies();
+
+
             InitGame();
         }
 
@@ -70,9 +78,9 @@ namespace Game
         {
 
             GameManager.Init();
-            /*var path = "Prefabs/Enemy";
+            var path = "Prefabs/Enemy";
             var patternItem = Resources.Load(path) as GameObject;
-            
+
             if (!patternItem)
             {
                 Debug.LogError("Prefab " + path + " not found");
@@ -87,7 +95,8 @@ namespace Game
 
             info.prefabName = patternItem.name;
 
-            var pool = PoolManager.GetOrCreatePool(info);*/
+            var pool = PoolManager.GetOrCreatePool(info);
+                
         }
     }
 }

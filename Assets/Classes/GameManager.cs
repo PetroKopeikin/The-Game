@@ -1,27 +1,24 @@
 ﻿using Core;
-using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Runtime.Serialization.Formatters.Binary;
-using System.Text;
-using System.Threading.Tasks;
-using UnityEditor.Build.Content;
 using UnityEngine;
 
 namespace Game
 {
+    [Dependency(typeof(GameManager))]
     public class GameManager
     {
-
+        private SimpleActionProvider<SaveGameData> actionProvider;
         private SaveGameData saveGameData;
-        private SimpleActionProvider<SaveGameData> actionsProvider;
         public void Init()
         {
             saveGameData = new SaveGameData();
-            actionsProvider = new SimpleActionProvider<SaveGameData>();
+            this.GetContainer().AddDependencySingle<SimpleActionProvider<SaveGameData>>();
+            actionProvider = (SimpleActionProvider<SaveGameData>)this.GetContainer().Resolve(typeof(SimpleActionProvider<SaveGameData>));
+
+            actionProvider.AddAction("OnGameChanged", OnGameChanged);
+
             LoadGame();
-            this.GetActionProvider<SaveGameData>().AddAction("OnGameChanged", OnGameChanged);
         }
 
         public void LoadGame()
